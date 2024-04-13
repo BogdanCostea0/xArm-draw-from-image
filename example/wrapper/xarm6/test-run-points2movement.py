@@ -1,7 +1,6 @@
 # ======================[ GENERATE POINTS]============================
 import cv2
-import 
-as np
+import numpy as np
 import matplotlib.pyplot as plt
 
 # Load the image using OpenCV.
