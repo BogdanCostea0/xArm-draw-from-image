@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Load the image using OpenCV.
-im_cv = cv2.imread('example\wrapper\xarm6\test.png', cv2.IMREAD_GRAYSCALE)
+im_cv = cv2.imread('test.png', cv2.IMREAD_GRAYSCALE)
 
 # Use morphological operations to clean up the edges and reduce double lines to single lines.
 
@@ -26,11 +26,12 @@ edges_optimized = cv2.Canny(eroded, threshold1=50, threshold2=150)
 y_coords_optimized, x_coords_optimized = np.where(edges_optimized > 0)
 
 # Define scaling factors based on the robot's workspace and image dimensions
-scale_x = 1080    / 1080
-scale_y = 1080 / 1080
-offset_x = 100 # Offset to position the drawing correctly in the robot's workspace
-offset_y = 100
+scale_x = 297    / 1080
+scale_y = 210 / 1080
+offset_x = 10 # Offset to position the drawing correctly in the robot's workspace
+offset_y = 10
 magic_coeficient = 0.3
+
 # Convert image points to robot coordinates
 robot_trajectory = []
 counter = 0
@@ -53,7 +54,7 @@ for each_pair_of_coord in robot_trajectory:
 
 
 print(f'Total lenght of robot traj: {len(robot_trajectory)}')
-'''
+
 # =================================[ROBOT MOVEMENT]==========================
 
 import os
@@ -101,7 +102,3 @@ for eachPairOfCoords in robot_trajectory:
 
 arm.disconnect()
 
-
-
-
-'''
