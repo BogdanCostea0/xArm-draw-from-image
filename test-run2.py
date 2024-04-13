@@ -4,33 +4,48 @@ import numpy as np
 import pandas as pd
 
 robot_trajectory = []
-im = plt.imread("../test.png")
+im = plt.imread("./test.png")
 def rgb2gray(rgb):
     return np.dot(rgb[...,:3], [0.2989, 0.5870, 0.1140])
 grey = rgb2gray(im)
 coordinates_np = np.argwhere(grey < 0.99)
 coordinates = coordinates_np.tolist()
 
+MAGIC_NUMBER = 0.3
+OFFSET = 50
+
+
 sorted_coordinates = pd.DataFrame({'x': coordinates_np[:, 1], 'y': coordinates_np[:, 0], 'z': 60})
 sorted_coordinates.sort_values('x', inplace=True)
 
-robot_trajectory = sorted_coordinates[['x', 'y']].values.tolist()
-
-
+robot_trajectory = sorted_coordinates[['x', 'y', 'z']].values.tolist()
 
 for each_pair_of_coord in robot_trajectory:
+
+    each_pair_of_coord[0]= int(each_pair_of_coord[0] * MAGIC_NUMBER + OFFSET)
+    each_pair_of_coord[1]= int(each_pair_of_coord[1] * MAGIC_NUMBER + OFFSET)
     print(f'X: {each_pair_of_coord[0]} | Y: {each_pair_of_coord[1]} | Z: {each_pair_of_coord[2]} ')
 
+counter = 0
+robot_trajectory2 = []
+for each_pair_of_coord in robot_trajectory:
+    if counter % 25 == 0:
+        robot_trajectory2.append(each_pair_of_coord)
+    counter += 1
 
-print(f'Total lenght of robot traj: {len(robot_trajectory)}')
+for each_pair_of_coord in robot_trajectory2:
+    print(f'X: {each_pair_of_coord[0]} | Y: {each_pair_of_coord[1]} | Z: {each_pair_of_coord[2]} ')
+
+print(f'Total lenght of robot traj: {len(robot_trajectory2)}')
+
+robot_trajectory = robot_trajectory2
 
 
 # =================================[ROBOT MOVEMENT]==========================
 
 import os
 import sys
-import time
-import math
+
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '../../..'))
 
@@ -72,4 +87,3 @@ for eachPairOfCoords in robot_trajectory:
 arm.reset(wait=True)
 
 arm.disconnect()
-
