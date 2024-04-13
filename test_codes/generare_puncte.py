@@ -4,7 +4,7 @@ from PIL import Image
 import cv2
 import math
 
-im = plt.imread("dexter.png")
+im = plt.imread("test.png")
 def rgb2gray(rgb):
     return np.dot(rgb[...,:3], [0.2989, 0.5870, 0.1140])
 grey = rgb2gray(im)
@@ -53,18 +53,26 @@ def sort_by_trajectory_with_priority(coordinates):
 sorted_coordinates = sort_by_trajectory_with_priority(coordinates)
 #print(sorted_coordinates)
 
-dexter_list = []
-for i in range(0,len(sorted_coordinates),30):
-    dexter_list.append(i)
 
-nr_coordonate = 0
-for i in dexter_list:
-    nr_coordonate += 1
+print(sorte)
+# dexter_list = []
+# for i in range(0,len(sorted_coordinates),30):
+#     dexter_list.append(i)
 
-print(nr_coordonate)
+# nr_coordonate = 0
+# for i in dexter_list:
+#     nr_coordonate += 1
 
-x_values = [sorted_coordinates[i][1] for i in dexter_list]  
-y_values = [sorted_coordinates[i][0] for i in dexter_list]
+# print(nr_coordonate)
+
+# for i in dexter_list
+
+
+# x_values = [sorted_coordinates[i][1] for i in dexter_list]  
+# y_values = [sorted_coordinates[i][0] for i in dexter_list]
+
+
+
 
 plt.plot(x_values, y_values)
 plt.show()
