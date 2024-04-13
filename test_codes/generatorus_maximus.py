@@ -26,6 +26,7 @@ edges_optimized = cv2.Canny(eroded, threshold1=150, threshold2=250)
 # Find coordinates of these edges.
 y_coords_optimized, x_coords_optimized = np.where(edges_optimized > 0)
 
+# formula to get distance from a point to another point
 
 # Plot the result with y-coordinates in the correct order.
 plt.figure(figsize=(12, 7))
