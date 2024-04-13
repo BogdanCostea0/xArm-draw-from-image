@@ -4,16 +4,16 @@ import matplotlib.pyplot as plt
 import cv2
 
 
-image = cv2.imread("./test_files/3_lines.png")
+image = cv2.imread("./test_files/curved_line.png")
 
 # convert to grayscale
 grayscale = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
 # perform edge detection
-edges = cv2.Canny(grayscale, 30, 100)
+edges = cv2.Canny(grayscale, 50, 100)
 
 # detect lines in the image using hough lines technique
-lines = cv2.HoughLinesP(edges, 1, np.pi/180, 100, np.array([]), 80, 40)
+lines = cv2.HoughLinesP(edges, 1, np.pi/180, 100, np.array([]), 20, 10)
 
 for line in lines:
     for x1, y1, x2, y2 in line:
