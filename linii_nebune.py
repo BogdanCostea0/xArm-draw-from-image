@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import cv2
 
 
-image = cv2.imread("../test_files/test3.png")
+image = cv2.imread("./test_files/test3.png")
 
 # convert to grayscale
 grayscale = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -12,79 +12,69 @@ grayscale = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 # perform edge detection
 edges = cv2.Canny(grayscale, 50, 100)
 
-# detect lines in the image using hough lines technique
-lines = cv2.HoughLinesP(edges, 1, np.pi/180, 100, np.array([]), 20, 10)
+# get the coordinates of the edges
+y_coords, x_coords = np.where(edges > 0)
 
-if lines is None or len(lines) < 5:
-    print('No lines found')
+# edges to countours
+contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-    # detect lines in the image using contour technique
-    contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    # make sure that the contours are not empty
 
-    # transform the contours into lines for better visualization
-    lines = []
+# make image with contours
+# image = cv2.drawContours(image, contours, -1, (0, 255, 0), 3)
+lines = []
+if(len(contours) > 0):
+    # get x and y coordinates of the contours and create lines
     for contour in contours:
         for i in range(len(contour) - 1):
             x1, y1 = contour[i][0]
             x2, y2 = contour[i + 1][0]
             lines.append([[x1, y1, x2, y2]])
 
-    # reduce the number of lines by tolerance (distance between points)
-    lines = np.array(lines)
-    tolerance = 18
-    new_lines = []
+    # reduce the number of lines by merging lines that are close to each other into one line if the distance between them is less than 10 pixels
 
-    for line in lines:
-        x1, y1, x2, y2 = line[0]
-        if len(new_lines) == 0:
-            new_lines.append(line)
-        else:
-            x1_last, y1_last, x2_last, y2_last = new_lines[-1][0]
-            if np.sqrt((x1 - x1_last) ** 2 + (y1 - y1_last) ** 2) < tolerance:
-                new_lines[-1][0] = [x1_last, y1_last, x2, y2]
-            else:
-                new_lines.append(line)
-    new_lines = np.array(new_lines)
-    lines = new_lines
+    for i in range(len(lines) - 1):
+        for j in range(i + 1, len(lines)):
+            x1, y1, x2, y2 = lines[i][0]
+            x3, y3, x4, y4 = lines[j][0]
+            if np.sqrt((x1 - x3) ** 2 + (y1 - y3) ** 2) < 10:
+                lines[i][0] = [x1, y1, x4, y4]
+                lines.pop(j)
+                break
 
-    # merge lines that are close to each other
-    tolerance = 10
-    new_lines = []
-    for line in lines:
-        x1, y1, x2, y2 = line[0]
-        if len(new_lines) == 0:
-            new_lines.append(line)
-        else:
-            x1_last, y1_last, x2_last, y2_last = new_lines[-1][0]
-            if np.sqrt((x1 - x1_last) ** 2 + (y1 - y1_last) ** 2) < tolerance:
-                new_lines[-1][0] = [x1_last, y1_last, x2, y2]
-            else:
-                new_lines.append(line)
-    new_lines = np.array(new_lines)
-    lines = new_lines
+    # reduce lines that are shorter than a variable named pixel
+    pixel = 4
+    lines = [line for line in lines if np.sqrt((line[0][0] - line[0][2]) ** 2 + (line[0][1] - line[0][3]) ** 2) > pixel]
 
-    # make long lines shorter by removing the middle part
-    tolerance = 10
-    new_lines = []
-    for line in lines:
-        x1, y1, x2, y2 = line[0]
-        if np.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2) > tolerance:
-            new_lines.append(line)
-    new_lines = np.array(new_lines)
-    lines = new_lines
+    # unite lines that are close to each other
 
-    for line in lines:
-        for x1, y1, x2, y2 in line:
-            cv2.line(image, (x1, y1), (x2, y2), (20, 220, 20), 3)
-    print(f'Number of lines: {len(lines)}')
+    for i in range(len(lines) - 1):
+        for j in range(i + 1, len(lines)):
+            x1, y1, x2, y2 = lines[i][0]
+            x3, y3, x4, y4 = lines[j][0]
+            if np.sqrt((x1 - x3) ** 2 + (y1 - y3) ** 2) < 10:
+                lines[i][0] = [x1, y1, x4, y4]
+                lines.pop(j)
+                break
 
-else:
+    # make rounded lines with the coordinates of the lines that are close to each other and have the same slope
+    for i in range(len(lines) - 1):
+        for j in range(i + 1, len(lines)):
+            x1, y1, x2, y2 = lines[i][0]
+            x3, y3, x4, y4 = lines[j][0]
+            if np.sqrt((x1 - x3) ** 2 + (y1 - y3) ** 2) < 10:
+                lines[i][0] = [x1, y1, x4, y4]
+                lines.pop(j)
+                break
+
+
+    # draw lines
     for line in lines:
         for x1, y1, x2, y2 in line:
             cv2.line(image, (x1, y1), (x2, y2), (20, 220, 20), 3)
 
-    print(f'Number of lines: {len(lines)}')
+
+
+print(len(lines))
 
 plt.imshow(image)
 plt.show()
@@ -94,8 +84,8 @@ plt.show()
 import os
 import sys
 
-WRITE_HEIGHT = 10 # drawing level
-SAFE_HEIGHT = 30 # used to retreat after drawing a line
+WRITE_HEIGHT = 25 # drawing level
+SAFE_HEIGHT = 40 # used to retreat after drawing a line
 MAGIC_NUMBER = 0.3 # used as a scale factor
 OFFSET = 40
 sys.path.append(os.path.join(os.path.dirname(__file__), '../../..'))
@@ -127,7 +117,7 @@ arm.set_mode(0)
 arm.set_state(state=0)
 arm.reset(wait=True)
 
-speed = 75
+speed = 400
 print(f' Number of lines: {len(lines)}')
 
 for line in lines:
