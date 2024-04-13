@@ -1,5 +1,5 @@
 opencv-python==4.9.0.80
-
+python-csv==0.0.13
 numpy~=1.26.4
 matplotlib~=3.8.4
 setuptools~=68.2.0

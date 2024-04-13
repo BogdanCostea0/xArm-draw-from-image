@@ -17,7 +17,7 @@ _, thresh = cv2.threshold(blurred, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OT
 # Increase the size of the kernel for more aggressive dilation and erosion to merge lines closer together.
 kernel = np.ones((3, 3), np.uint8)  # Increase kernel size for more aggressive morphological operations.
 dilated = cv2.dilate(thresh, kernel, iterations=2)  # Increase iterations if needed.
-eroded = cv2.erode(dilated, kernel, iterations=1)  # Possibly reduce iterations to avoid over-thinning.
+eroded = cv2.erode(dilated, kernel, iterations=3)  # Possibly reduce iterations to avoid over-thinning.
 
 # Detect edges again using the Canny algorithm after morphological operations.
 edges_optimized = cv2.Canny(eroded, threshold1=50, threshold2=150)
@@ -26,11 +26,11 @@ edges_optimized = cv2.Canny(eroded, threshold1=50, threshold2=150)
 y_coords_optimized, x_coords_optimized = np.where(edges_optimized > 0)
 
 # Define scaling factors based on the robot's workspace and image dimensions
-scale_x = 297    / 600
-scale_y = 210 / 600
-offset_x = 50 # Offset to position the drawing correctly in the robot's workspace
-offset_y = 50
-magic_coeficient = 0.8
+scale_x = 297    / 1000
+scale_y = 210 / 1000
+offset_x = 100 # Offset to position the drawing correctly in the robot's workspace
+offset_y = 100
+magic_coeficient = 0.6  
 
 # Convert image points to robot coordinates
 robot_trajectory = []
@@ -98,9 +98,9 @@ for eachPairOfCoords in robot_trajectory:
     print(f'Go to X:{eachPairOfCoords[0]}  Y:{eachPairOfCoords[1]}  Z:{eachPairOfCoords[2]}')
     arm.set_position(x=eachPairOfCoords[0], y=eachPairOfCoords[1], z=eachPairOfCoords[2], wait=True)
     # print(arm.get_servo_angle(), arm.get_servo_angle(is_radian=False))
-    time.sleep(0.5)
+    # time.sleep(0.05)
 
-# arm.reset(wait=True)
+arm.reset(wait=True)
 
 arm.disconnect()
 

@@ -2,8 +2,11 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
+
+#Open csv file
 # Load the image using OpenCV.
-im_cv = cv2.imread("dexter.png", cv2.IMREAD_GRAYSCALE)
+im_cv = cv2.imread("test.png", cv2.IMREAD_GRAYSCALE)
+
 
 # Use morphological operations to clean up the edges and reduce double lines to single lines.
 
@@ -23,6 +26,7 @@ edges_optimized = cv2.Canny(eroded, threshold1=50, threshold2=150)
 
 # Find coordinates of these edges.
 y_coords_optimized, x_coords_optimized = np.where(edges_optimized > 0)
+
 
 # Plot the result with y-coordinates in the correct order.
 plt.figure(figsize=(12, 7))
