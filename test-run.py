@@ -26,11 +26,11 @@ edges_optimized = cv2.Canny(eroded, threshold1=50, threshold2=150)
 y_coords_optimized, x_coords_optimized = np.where(edges_optimized > 0)
 
 # Define scaling factors based on the robot's workspace and image dimensions
-scale_x = 297    / 1080
-scale_y = 210 / 1080
-offset_x = 10 # Offset to position the drawing correctly in the robot's workspace
-offset_y = 10
-magic_coeficient = 0.3
+scale_x = 297    / 600
+scale_y = 210 / 600
+offset_x = 50 # Offset to position the drawing correctly in the robot's workspace
+offset_y = 50
+magic_coeficient = 0.8
 
 # Convert image points to robot coordinates
 robot_trajectory = []
@@ -53,7 +53,8 @@ for each_pair_of_coord in robot_trajectory:
     print(f'X: {each_pair_of_coord[0]} | Y: {each_pair_of_coord[1]} | Z: {each_pair_of_coord[2]} ')
 
 
-print(f'Total lenght of robot traj: {len(robot_trajectory)}')
+print(f'Total lenght of robot traj: {len(robot_trajectory)}') 
+
 
 # =================================[ROBOT MOVEMENT]==========================
 
@@ -94,9 +95,10 @@ arm.reset(wait=True)
 speed = 50
 
 for eachPairOfCoords in robot_trajectory:
-    arm.set_position(x=each_pair_of_coord[0], y=each_pair_of_coord[1], z=each_pair_of_coord[2], wait=True)
-    print(arm.get_servo_angle(), arm.get_servo_angle(is_radian=False))
-
+    print(f'Go to X:{eachPairOfCoords[0]}  Y:{eachPairOfCoords[1]}  Z:{eachPairOfCoords[2]}')
+    arm.set_position(x=eachPairOfCoords[0], y=eachPairOfCoords[1], z=eachPairOfCoords[2], wait=True)
+    # print(arm.get_servo_angle(), arm.get_servo_angle(is_radian=False))
+    time.sleep(0.5)
 
 # arm.reset(wait=True)
 
