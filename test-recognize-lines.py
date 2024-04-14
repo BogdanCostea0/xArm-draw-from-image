@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import cv2
 
 
-image = cv2.imread("./test_files/curved_line.png")
+image = cv2.imread("./test_files/trifoi.jpeg")
 
 # convert to grayscale
 grayscale = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -27,7 +27,7 @@ plt.show()
 import os
 import sys
 
-WRITE_HEIGHT = 10 # drawing level
+WRITE_HEIGHT = 15 # drawing level
 SAFE_HEIGHT = 30 # used to retreat after drawing a line
 MAGIC_NUMBER = 0.3 # used as a scale factor
 OFFSET = 40

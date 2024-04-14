@@ -1,7 +1,7 @@
 import cv2
 
 # Citirea imaginii
-image = cv2.imread('./test_files/daria.jpeg')
+image = cv2.imread('./test_files/trifoi.jpeg')
 
 # Convertirea imaginii în gri
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -48,7 +48,7 @@ for line in lines:
 import os
 import sys
 
-WRITE_HEIGHT = 6.5 # drawing level
+WRITE_HEIGHT = 15 # drawing level
 SAFE_HEIGHT = 20 # used to retreat after drawing a line
 MAGIC_NUMBER = 0.3 # used as a scale factor
 OFFSET = 40

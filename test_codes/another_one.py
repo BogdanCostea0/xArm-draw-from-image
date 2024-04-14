@@ -1,7 +1,7 @@
 import cv2
 
 # Citirea imaginii
-image = cv2.imread('../test_files/test2.png')
+image = cv2.imread('../test_files/floare.jpeg')
 
 # Convertirea imaginii în gri
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -41,6 +41,12 @@ for i in range(len(contour_coordinates) - 1):
 print("Linii:", len(lines))
 for line in lines:
     print(line)
+
+# cream imaginea din linii
+for line in lines:
+    for x1, y1, x2, y2 in line:
+        cv2.line(image, (x1, y1), (x2, y2), (20, 220, 20), 3)
+
 
 
 # Afișăm imaginea și așteptăm tasta 'q' pentru a închide fereastra

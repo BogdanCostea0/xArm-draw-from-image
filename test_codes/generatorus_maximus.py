@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 # Load the image using OpenCV.
 # im = plt.imread("../test_files/test.png")
-im_cv = cv2.imread("../test_files/test.png", cv2.IMREAD_GRAYSCALE)
+im_cv = cv2.imread("../test_files/floare.jpeg", cv2.IMREAD_GRAYSCALE)
 
 # Use morphological operations to clean up the edges and reduce double lines to single lines.
 

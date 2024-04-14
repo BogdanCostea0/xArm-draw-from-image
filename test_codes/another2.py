@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 # Incarca imaginea desenului
-imagine = cv2.imread('../test_files/house.png')
+imagine = cv2.imread('../test_files/floare.jpeg')
 
 # Converteste imaginea in grayscale
 imagine_gri = cv2.cvtColor(imagine, cv2.COLOR_BGR2GRAY)
