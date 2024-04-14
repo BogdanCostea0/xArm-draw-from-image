@@ -4,7 +4,10 @@ from matplotlib import pyplot as plt
 from scipy.interpolate import splprep, splev
 
 # Load the image
-im_cv = cv2.imread("../test_files/test3.png", cv2.IMREAD_GRAYSCALE)
+im_cv = cv2.imread("../test_files/daria.jpeg", cv2.IMREAD_GRAYSCALE)
+
+# scale every photo to 1024x768
+im_cv = cv2.resize(im_cv, (3508,2480), interpolation=cv2.INTER_AREA)
 
 # Apply GaussianBlur
 blurred = cv2.GaussianBlur(im_cv, (5, 5), 0)
@@ -61,10 +64,11 @@ print(f"Total lines used: {line_counter}")
 import os
 import sys
 
-WRITE_HEIGHT = 8.5  # drawing level
-SAFE_HEIGHT = 50  # used to retreat after drawing a line
-MAGIC_NUMBER = 0.3  # used as a scale factor
-OFFSET = 40
+WRITE_HEIGHT = 10  # drawing level
+SAFE_HEIGHT = 85  # used to retreat after drawing a line
+MAGIC_NUMBER = 0.05  # used as a scale factor
+OFFSET = 120
+OFFSETY = 40
 sys.path.append(os.path.join(os.path.dirname(__file__), '../../..'))
 
 from xarm.wrapper import XArmAPI
@@ -97,24 +101,29 @@ arm.reset(wait=True)
 
 speed = 500
 
+arm.set_position(z=SAFE_HEIGHT, wait=True)
+
 counter = 0
-# current_points = current_points[::50]
+current_points = current_points[::50]
 
 # reduce the number of points proportional to the number of points in the current_points list
-if(len(current_points) > 100):
-    current_points = current_points[::int(len(current_points)/100)]
-    current_points = current_points[::2]
-else:
-    current_points = current_points[::2]
+# if(len(current_points) > 100):
+#     current_points = current_points[::int(len(current_points)/100)]
+#     current_points = current_points[::2]
+# else:
+#     current_points = current_points[::2]
 
 print(f' Number of points: {len(current_points)}')
 for each in current_points:
-    if (counter == 0):
-        arm.set_position(x=each[0] * MAGIC_NUMBER + OFFSET, y=each[1] * MAGIC_NUMBER, z=SAFE_HEIGHT, wait=True)
-    counter += 1
-    print(f'[{counter} / {len(current_points)}]Go to X:{each[0] * MAGIC_NUMBER + OFFSET}  Y:{each[1] * MAGIC_NUMBER}  Z:{WRITE_HEIGHT}')
-    arm.set_position(x=each[0] * MAGIC_NUMBER + OFFSET, y=each[1] * MAGIC_NUMBER, z=WRITE_HEIGHT, wait=True)
 
+    if (counter == 0):
+            arm.set_position(x=each[0] * MAGIC_NUMBER + OFFSET, y=each[1] * MAGIC_NUMBER, z=SAFE_HEIGHT, wait=True)
+
+    counter += 1
+    if (counter != 0):
+        print(f'[{counter} / {len(current_points)}]Go to X:{each[0] * MAGIC_NUMBER + OFFSET}  Y:{each[1] * MAGIC_NUMBER}  Z:{WRITE_HEIGHT}')
+        arm.set_position(x=each[0] * MAGIC_NUMBER + OFFSET, y=each[1] * MAGIC_NUMBER - OFFSETY, z=WRITE_HEIGHT, wait=True)
+    # arm.set_position(z=WRITE_HEIGHT+10, wait=True)
     # if(counter == len(points)):
     # arm.set_position(x=each[0] * MAGIC_NUMBER+OFFSET, y=each[1] * MAGIC_NUMBER, z=SAFE_HEIGHT, wait=True)
 
