@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 #Open csv file
 # Load the image using OpenCV.
-im_cv = cv2.imread("test.png", cv2.IMREAD_GRAYSCALE)
+im_cv = cv2.imread("hanga/test.png", cv2.IMREAD_GRAYSCALE)
 
 
 # Use morphological operations to clean up the edges and reduce double lines to single lines.

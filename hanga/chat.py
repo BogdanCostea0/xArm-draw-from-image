@@ -4,7 +4,7 @@ from matplotlib import pyplot as plt
 from scipy.interpolate import splprep, splev
 
 # Load the image
-im_cv = cv2.imread("./test_files/test3.png", cv2.IMREAD_GRAYSCALE)
+im_cv = cv2.imread("../test_files/test3.png", cv2.IMREAD_GRAYSCALE)
 
 # Apply GaussianBlur
 blurred = cv2.GaussianBlur(im_cv, (5, 5), 0)

@@ -1,7 +1,7 @@
 import cv2
 
 # Citirea imaginii
-image = cv2.imread('./test_files/trifoi.jpeg')
+image = cv2.imread('../test_files/trifoi.jpeg')
 
 # Convertirea imaginii în gri
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)

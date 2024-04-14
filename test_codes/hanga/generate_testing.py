@@ -2,7 +2,7 @@ from matplotlib import pyplot as plt
 import numpy as np
 import pandas as pd
 
-im = plt.imread("../test_files/test.png")
+im = plt.imread("../../test_files/test.png")
 
 
 def rgb2gray(rgb):

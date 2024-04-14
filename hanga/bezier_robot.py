@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Citirea imaginii
-image = cv2.imread('./test_files/floare.jpeg')
+image = cv2.imread('../test_files/floare.jpeg')
 
 # Convertirea imaginii la tonuri de gri
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)

@@ -19,7 +19,7 @@ global imgSizeY
 
 # IMAGE PROCESSING
 # resize image such that it fits within number of motor steps
-im_original = cv2.imread('../test_files/house.png')
+im_original = cv2.imread('../../test_files/house.png')
 imgSizeY, imgSizeX = im_original.shape[:2]
 
 if (imgSizeX > imgSizeY):

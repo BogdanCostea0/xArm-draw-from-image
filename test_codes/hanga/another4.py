@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
-img = cv2.imread('../test_files/house.png')
-gray = cv2.imread('../test_files/house.png',0)
+img = cv2.imread('../../test_files/house.png')
+gray = cv2.imread('../../test_files/house.png', 0)
 img=np.uint8(img)
 
 blank=np.zeros([768,1024,3],np.uint8)
