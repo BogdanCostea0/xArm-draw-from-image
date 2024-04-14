@@ -1,72 +1,54 @@
-# ======================[ GENERATE POINTS]============================
-import numpy as np
-import matplotlib.pyplot as plt
 import cv2
 
+# Citirea imaginii
+image = cv2.imread('./test_files/daria.jpeg')
 
-image = cv2.imread("./test_files/test.png")
+# Convertirea imaginii în gri
+gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-# convert to grayscale
-grayscale = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+# Binarizarea imaginii
+_, binary = cv2.threshold(gray, 200, 255, cv2.THRESH_BINARY_INV)
 
-# perform edge detection
-edges = cv2.Canny(grayscale, 50, 100)
+# Găsirea contururilor în imaginea binarizată
+contours, _ = cv2.findContours(binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-# get the coordinates of the edges
-y_coords, x_coords = np.where(edges > 0)
+# Inițializarea listei pentru a stoca coordonatele contururilor
+contour_coordinates = []
 
-# edges to countours
-contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
-contours = sorted(contours, key=lambda x: cv2.contourArea(x), reverse=True)
-
-lines = []
-
-# get x and y coordinates of the contours and create lines
+# Iterăm prin toate contururile găsite
 for contour in contours:
-    x = [point[0][0] for point in contour]
-    y = [point[0][1] for point in contour]
-    # remove the last point because it is the same as the first point
-    x.pop()
-    y.pop()
+    # Aproximăm conturul cu o precizie specificată
+    epsilon = 0.01 * cv2.arcLength(contour, True)
+    approx = cv2.approxPolyDP(contour, epsilon, True)
 
-    for i in range(len(x) - 1):
-        lines.append([[x[i], y[i], x[i + 1], y[i + 1]]])
+    # Obținem coordonatele aproximative ale conturului și le adăugăm la lista de coordonate
+    for coord in approx:
+        x, y = coord[0]
+        contour_coordinates.append((x, y))
 
-# remove dublicates
+# Afisăm coordonatele conturului
+# print("Coordonatele conturului:")
+# for coord in contour_coordinates:
+#     print(coord)
 
-for i in range(len(lines) - 1):
-    for j in range(i + 1, len(lines)):
-        x1, y1, x2, y2 = lines[i][0]
-        x3, y3, x4, y4 = lines[j][0]
-        if np.sqrt((x1 - x3) ** 2 + (y1 - y3) ** 2) < 10:
-            lines[i][0] = [x1, y1, x4, y4]
-            lines.pop(j)
-            break
+# obtinem linii din coordonatele conturului
+lines = []
+for i in range(len(contour_coordinates) - 1):
+    x1, y1 = contour_coordinates[i]
+    x2, y2 = contour_coordinates[i + 1]
+    lines.append([[x1, y1, x2, y2]])
 
-# remove short lines
-pixel = 5
-lines = [line for line in lines if np.sqrt((line[0][0] - line[0][2]) ** 2 + (line[0][1] - line[0][3]) ** 2) > pixel]
-
-
-# draw lines
+print("Linii:", len(lines))
 for line in lines:
-    for x1, y1, x2, y2 in line:
-        cv2.line(image, (x1, y1), (x2, y2), (20, 220, 20), 3)
+    print(line)
 
-
-
-print(len(lines))
-
-plt.imshow(image)
-plt.show()
 
 # =================================[ROBOT MOVEMENT]==========================
 
 import os
 import sys
 
-WRITE_HEIGHT = 7 # drawing level
+WRITE_HEIGHT = 6.5 # drawing level
 SAFE_HEIGHT = 20 # used to retreat after drawing a line
 MAGIC_NUMBER = 0.3 # used as a scale factor
 OFFSET = 40
@@ -101,15 +83,16 @@ arm.reset(wait=True)
 
 speed = 500
 print(f' Number of lines: {len(lines)}')
-
+counter = 0
 for line in lines:
     for x1,y1,x2,y2 in line:
+        counter += 1
         # goes to the line start
         print(f'Go to X:{x1 * MAGIC_NUMBER + OFFSET}  Y:{y1 * MAGIC_NUMBER}  Z:{WRITE_HEIGHT}')
         arm.set_position(x=x1 * MAGIC_NUMBER + OFFSET, y=y1 * MAGIC_NUMBER, z=WRITE_HEIGHT, wait=True)
 
         # draw the line till the end
-        print(f'Drawing line to X:{x2 * MAGIC_NUMBER + OFFSET}  Y:{y2 * MAGIC_NUMBER}  Z:{WRITE_HEIGHT}')
+        print(f'Drawing line {counter} / {len(lines)}  to X:{x2 * MAGIC_NUMBER + OFFSET}  Y:{y2 * MAGIC_NUMBER}  Z:{WRITE_HEIGHT}')
         arm.set_position(x=x2 * MAGIC_NUMBER + OFFSET, y=y2 * MAGIC_NUMBER, z=WRITE_HEIGHT, wait=True)
 
         # retreat to a safe zone, Z level is changed to SAFE_HEIGHT
