@@ -63,7 +63,7 @@ window.mainloop()
 
 import os
 import sys
-choice = input("Alege varianta. 1- FIIRBots, 2 - RSP, 3 - SPD, 4 - FIIRBots")
+choice = input("Alege varianta. 1- FIIRBots, 2 - RSP, 3 - SPD, 4 - FIIRBots:      ")
 
 UP_HEIGHT = 100 # drawing level
 GRAB_HEIGHT = 20 # used to retreat after drawing a line
