@@ -65,8 +65,8 @@ import os
 import sys
 choice = input("Alege varianta. 1- FIIRBots, 2 - RSP, 3 - SPD, 4 - FIIRBots:      ")
 
-UP_HEIGHT = 100 # drawing level
-GRAB_HEIGHT = 20 # used to retreat after drawing a line
+UP_HEIGHT = 100 # safe level
+GRAB_HEIGHT = 35 # to grab stamp
 
 OFFSET = 40
 sys.path.append(os.path.join(os.path.dirname(__file__), '../../..'))
@@ -93,6 +93,7 @@ else:
 # RESET, ACTIVATE ROBOT AND SET PARAMETERS
 
 arm = XArmAPI(ip, is_radian=True)
+arm.set_baud_checkset_enable(False)
 arm.motion_enable(enable=True)
 arm.set_mode(0)
 arm.set_state(state=0)
@@ -100,53 +101,41 @@ arm.reset(wait=True)
 
 speed = 75
 
-code = arm.set_gripper_mode(0)
-print('set gripper mode: location mode, code={}'.format(code))
-
-code = arm.set_gripper_enable(True)
-print('set gripper enable, code={}'.format(code))
-
-code = arm.set_gripper_speed(5000)
-print('set gripper speed, code={}'.format(code))
-
-
 if int(choice) == 1:
     # go to grab stamp 
-    yStamp = 0
-    xStamp = 213
+    yStamp = -260
+    xStamp = 115
 elif int(choice) == 2:
-    yStamp = 40
-    xStamp = 213
+    yStamp = -260
+    xStamp = 185
 elif int(choice) == 3:
-    yStamp = 80
-    xStamp = 213
+    yStamp = -260
+    xStamp = 255
 elif int(choice) == 4:
-    yStamp = -40
-    xStamp = 2131
-    
+    yStamp = -260
+    xStamp = 310
+arm.open_lite6_gripper()
+
 # go to grab stamp 
 arm.set_position(x=xStamp, y=yStamp, z=UP_HEIGHT, wait=True,speed=150)
 arm.set_position(x=xStamp, y=yStamp, z=GRAB_HEIGHT, wait=True, speed=50)
-code = arm.set_gripper_position(300, wait=True)
-print('[wait]set gripper pos, code={}'.format(code))
+arm.close_lite6_gripper()
 arm.set_position(x=xStamp, y=yStamp, z=UP_HEIGHT, wait=True,speed=150)
 
 # go to ink
-arm.set_position(x=270, y=0, z=UP_HEIGHT, wait=True,speed=150)
-arm.set_position(x=270, y=0, z=GRAB_HEIGHT, wait=True,speed=50)
-arm.set_position(x=270, y=0, z=UP_HEIGHT, wait=True,speed=150)
+arm.set_position(x=159, y=-160, z=UP_HEIGHT, wait=True,speed=150)
+arm.set_position(x=159, y=-160, z=GRAB_HEIGHT+5, wait=True,speed=50)
+arm.set_position(x=159, y=-160, z=UP_HEIGHT, wait=True,speed=150)
 
 # go to stamp flyer
-arm.set_position(x=350, y=0, z=UP_HEIGHT, wait=True,speed=150)
-arm.set_position(x=350, y=0, z=GRAB_HEIGHT, wait=True,speed=50)
-arm.set_position(x=350, y=0, z=UP_HEIGHT, wait=True,speed=150)
+arm.set_position(x=229, y=-20, z=UP_HEIGHT, wait=True,speed=150)
+arm.set_position(x=229, y=-20, z=GRAB_HEIGHT-10, wait=True,speed=50)
+arm.set_position(x=229, y=-20, z=UP_HEIGHT, wait=True,speed=150)
 
 # go to leave stamp 
 arm.set_position(x=xStamp, y=yStamp, z=UP_HEIGHT, wait=True,speed=150)
 arm.set_position(x=xStamp, y=yStamp, z=GRAB_HEIGHT, wait=True, speed=50)
-
-code = arm.set_gripper_position(600, wait=True)
-print('[wait]set gripper pos, code={}'.format(code))
+arm.open_lite6_gripper()
 arm.set_position(x=xStamp, y=yStamp, z=UP_HEIGHT, wait=True,speed=150)
 
 
