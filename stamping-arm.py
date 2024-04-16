@@ -100,27 +100,41 @@ arm.reset(wait=True)
 
 speed = 75
 
+code = arm.set_gripper_mode(0)
+print('set gripper mode: location mode, code={}'.format(code))
+
+code = arm.set_gripper_enable(True)
+print('set gripper enable, code={}'.format(code))
+
+code = arm.set_gripper_speed(5000)
+print('set gripper speed, code={}'.format(code))
 
 
 if int(choice) == 1:
     # go to grab stamp 
     yStamp = 0
+    xStamp = 213
 elif int(choice) == 2:
     yStamp = 40
+    xStamp = 213
 elif int(choice) == 3:
     yStamp = 80
+    xStamp = 213
 elif int(choice) == 4:
     yStamp = -40
+    xStamp = 2131
     
 # go to grab stamp 
-arm.set_position(x=100, y=yStamp, z=UP_HEIGHT, wait=True,speed=150)
-arm.set_position(x=100, y=yStamp, z=GRAB_HEIGHT, wait=True, speed=50)
-arm.set_position(x=100, y=yStamp, z=UP_HEIGHT, wait=True,speed=150)
+arm.set_position(x=xStamp, y=yStamp, z=UP_HEIGHT, wait=True,speed=150)
+arm.set_position(x=xStamp, y=yStamp, z=GRAB_HEIGHT, wait=True, speed=50)
+code = arm.set_gripper_position(300, wait=True)
+print('[wait]set gripper pos, code={}'.format(code))
+arm.set_position(x=xStamp, y=yStamp, z=UP_HEIGHT, wait=True,speed=150)
 
 # go to ink
-arm.set_position(x=250, y=0, z=UP_HEIGHT, wait=True,speed=150)
-arm.set_position(x=250, y=0, z=GRAB_HEIGHT, wait=True,speed=50)
-arm.set_position(x=250, y=0, z=UP_HEIGHT, wait=True,speed=150)
+arm.set_position(x=270, y=0, z=UP_HEIGHT, wait=True,speed=150)
+arm.set_position(x=270, y=0, z=GRAB_HEIGHT, wait=True,speed=50)
+arm.set_position(x=270, y=0, z=UP_HEIGHT, wait=True,speed=150)
 
 # go to stamp flyer
 arm.set_position(x=350, y=0, z=UP_HEIGHT, wait=True,speed=150)
@@ -128,9 +142,12 @@ arm.set_position(x=350, y=0, z=GRAB_HEIGHT, wait=True,speed=50)
 arm.set_position(x=350, y=0, z=UP_HEIGHT, wait=True,speed=150)
 
 # go to leave stamp 
-arm.set_position(x=150, y=yStamp, z=UP_HEIGHT, wait=True,speed=150)
-arm.set_position(x=150, y=yStamp, z=GRAB_HEIGHT, wait=True, speed=50)
-arm.set_position(x=150, y=yStamp, z=UP_HEIGHT, wait=True,speed=150)
+arm.set_position(x=xStamp, y=yStamp, z=UP_HEIGHT, wait=True,speed=150)
+arm.set_position(x=xStamp, y=yStamp, z=GRAB_HEIGHT, wait=True, speed=50)
+
+code = arm.set_gripper_position(600, wait=True)
+print('[wait]set gripper pos, code={}'.format(code))
+arm.set_position(x=xStamp, y=yStamp, z=UP_HEIGHT, wait=True,speed=150)
 
 
 arm.reset()
